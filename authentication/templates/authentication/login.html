@@ -1,5 +1,39 @@
 {% extends "base.html" %}
 
 {% block content %}
-    Hello, this is the login page.
+<div class="flex flex-col items-center justify-center w-full">
+    <h2 class="text-3xl font-bold mb-6 text-center">Connexion</h2>
+
+    <form method="post" class="form-control flex flex-col w-full max-w-sm gap-4">
+        {% csrf_token %}
+
+        <!-- Username -->
+        <div>
+            <label class="label">
+                <span class="label-text">Nom d'utilisateur</span>
+            </label>
+            <input type="text" name="username" placeholder="Votre nom d'utilisateur" class="input input-bordered w-full"
+                required />
+        </div>
+
+        <!-- Password -->
+        <div>
+            <label class="label">
+                <span class="label-text">Mot de passe</span>
+            </label>
+            <input type="password" name="password" placeholder="Votre mot de passe" class="input input-bordered w-full"
+                required />
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn btn-primary w-full mt-4">Se connecter</button>
+    </form>
+
+    <div class="divider w-full max-w-sm self-center">OU</div>
+
+    <div class="flex flex-col items-center gap-2">
+        <p class="text-sm">Vous n'avez pas encore de compte ?</p>
+        <a href="{% url 'signup' %}" class="btn btn-outline btn-secondary btn-sm">S'inscrire</a>
+    </div>
+</div>
 {% endblock %}

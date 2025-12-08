@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="flex flex-col items-center justify-center w-full h-full">
+    <h1 class="text-4xl font-bold mb-4">Bienvenue sur LITRevu</h1>
+    <p class="mb-4">Vous êtes connecté.</p>
+    <a href="{% url 'logout' %}" class="btn btn-error">Se déconnecter</a>
+</div>
+{% endblock %}
