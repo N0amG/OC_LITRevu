@@ -5,10 +5,11 @@ from .models import Ticket, Review
 class TicketForm(forms.ModelForm):
     class Meta:
         model = Ticket
-        fields = ['title', 'description']
+        fields = ['title', 'description', 'image']
         labels = {
             'title': 'Titre',
             'description': 'Description',
+            'image': 'Image',
         }
 
 

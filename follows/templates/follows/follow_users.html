@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="flex flex-col items-center w-full p-6 gap-8">
+    <a class="btn btn-soft btn-error btn-sm self-start" href="{% url 'home' %}">Retour</a>
+    <h2 class="text-3xl font-bold text-center">Suivre d'autres utilisateurs</h2>
+
+    <!-- Formulaire de recherche -->
+    <div class="w-full max-w-lg">
+        <form method="post" class="flex gap-2 items-end">
+            {% csrf_token %}
+            <div class="form-control w-full relative">
+                <label class="label">
+                    <span class="label-text font-bold">Ajouter un utilisateur</span>
+                </label>
+                {{ form.username }}
+                <ul id="autocomplete-results"
+                    class="menu bg-base-100 w-full rounded-box absolute top-full mt-1 z-50 hidden shadow-xl border border-base-200 max-h-60 overflow-y-auto">
+                    <!-- Les résultats s'afficheront ici -->
+                </ul>
+                {% for error in form.username.errors %}
+                <label class="label">
+                    <span class="label-text-alt text-error">{{ error }}</span>
+                </label>
+                {% endfor %}
+            </div>
+            <button type="submit" class="btn btn-primary">S'abonner</button>
+        </form>
+
+        {% if messages %}
+        <div class="toast toast-top toast-end">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                <span>{{ message }}</span>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Abonnements -->
+    <div class="w-full max-w-2xl">
+        <h3 class="text-xl font-bold mb-4 text-center">Abonnements</h3>
+        <div class="overflow-x-auto">
+            <table class="table w-full bg-base-100 shadow-xl rounded-box">
+                <tbody>
+                    {% for follow in following %}
+                    <tr class="hover">
+                        <td class="font-bold">{{ follow.followed_user.username }}</td>
+                        <td class="text-right">
+                            <form method="post" action="{% url 'unfollow_user' follow.followed_user.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-outline btn-error">Désabonner</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="2" class="text-center text-gray-500">Vous ne suivez personne pour le moment.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Abonnés -->
+    <div class="w-full max-w-2xl">
+        <h3 class="text-xl font-bold mb-4 text-center">Abonnés</h3>
+        <div class="overflow-x-auto">
+            <table class="table w-full bg-base-100 shadow-xl rounded-box">
+                <tbody>
+                    {% for follow in followers %}
+                    <tr class="hover">
+                        <td class="font-bold">{{ follow.user.username }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td class="text-center text-gray-500">Personne ne vous suit pour le moment.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a href="{% url 'home' %}" class="btn btn-ghost">Retour à l'accueil</a>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const input = document.querySelector('input[name="username"]');
+        const resultsList = document.getElementById('autocomplete-results');
+        let timeoutId;
+
+        function fetchUsers(query) {
+            fetch(`{% url 'search_users' %}?q=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    resultsList.innerHTML = '';
+                    if (data.length > 0) {
+                        resultsList.classList.remove('hidden');
+                        data.forEach(user => {
+                            const li = document.createElement('li');
+                            const a = document.createElement('a');
+                            a.textContent = user.username;
+                            a.href = "#";
+                            a.addEventListener('click', (e) => {
+                                e.preventDefault();
+                                input.value = user.username;
+                                resultsList.classList.add('hidden');
+                            });
+                            li.appendChild(a);
+                            resultsList.appendChild(li);
+                        });
+                    } else {
+                        resultsList.classList.add('hidden');
+                    }
+                });
+        }
+
+        input.addEventListener('focus', function () {
+            fetchUsers(this.value);
+        });
+
+        input.addEventListener('input', function () {
+            clearTimeout(timeoutId);
+            const query = this.value;
+
+            timeoutId = setTimeout(() => {
+                fetchUsers(query);
+            }, 300);
+        });
+
+        // Cacher la liste si on clique ailleurs
+        document.addEventListener('click', function (e) {
+            if (e.target !== input && !resultsList.contains(e.target)) {
+                resultsList.classList.add('hidden');
+            }
+        });
+    });
+</script>
+{% endblock %}

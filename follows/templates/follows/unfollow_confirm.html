@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="flex flex-col items-center justify-center w-full p-6">
+    <div class="card w-96 bg-base-100 shadow-xl border border-base-300">
+        <div class="card-body items-center text-center">
+            <h2 class="card-title text-error">Se désabonner ?</h2>
+            <p>Êtes-vous sûr de vouloir arrêter de suivre <strong>{{ user_to_unfollow.username }}</strong> ?</p>
+            
+            <form method="post" class="w-full mt-4">
+                {% csrf_token %}
+                <div class="card-actions justify-center gap-4">
+                    <button type="submit" class="btn btn-error">Confirmer</button>
+                    <a href="{% url 'follow_users' %}" class="btn btn-ghost">Annuler</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

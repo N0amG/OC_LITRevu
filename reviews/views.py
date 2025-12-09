@@ -8,7 +8,7 @@ from .forms import TicketForm, ReviewForm
 @login_required
 def create_ticket(request):
     if request.method == "POST":
-        form = TicketForm(request.POST)
+        form = TicketForm(request.POST, request.FILES)
         if form.is_valid():
             ticket = form.save(commit=False)
             ticket.user = request.user
@@ -28,7 +28,7 @@ def update_ticket(request, ticket_id):
         return HttpResponseForbidden("Vous n'êtes pas autorisé à modifier ce ticket.")
 
     if request.method == "POST":
-        form = TicketForm(request.POST, instance=ticket)
+        form = TicketForm(request.POST, request.FILES, instance=ticket)
         if form.is_valid():
             form.save()
             return redirect("home")
@@ -114,7 +114,7 @@ def delete_review(request, review_id):
 @login_required
 def create_ticket_and_review(request):
     if request.method == "POST":
-        ticket_form = TicketForm(request.POST)
+        ticket_form = TicketForm(request.POST, request.FILES)
         review_form = ReviewForm(request.POST)
         if ticket_form.is_valid() and review_form.is_valid():
             ticket = ticket_form.save(commit=False)

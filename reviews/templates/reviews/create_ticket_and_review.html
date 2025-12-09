@@ -4,7 +4,7 @@
 <div class="flex flex-col items-center justify-center w-full p-6">
     <h2 class="text-3xl font-bold mb-6 text-center">Créer un ticket et une critique</h2>
     
-    <form method="post" class="form-control w-full max-w-2xl gap-6">
+    <form method="post" enctype="multipart/form-data" class="form-control w-full max-w-2xl gap-6">
         {% csrf_token %}
         
         <div class="card bg-base-200 shadow-sm">
@@ -15,7 +15,7 @@
                     <label class="label">
                         <span class="label-text">{{ field.label }}</span>
                     </label>
-                    <div class="[&>input]:input [&>input]:input-bordered [&>input]:w-full [&>textarea]:textarea [&>textarea]:textarea-bordered [&>textarea]:w-full [&>textarea]:h-24">
+                    <div class="[&>input:not([type=file])]:input [&>input:not([type=file])]:input-bordered [&>input:not([type=file])]:w-full [&>textarea]:textarea [&>textarea]:textarea-bordered [&>textarea]:w-full [&>textarea]:h-24 [&>input[type=file]]:file-input [&>input[type=file]]:file-input-bordered [&>input[type=file]]:w-full">
                         {{ field }}
                     </div>
                     {% for error in field.errors %}
