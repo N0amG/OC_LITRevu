@@ -12,6 +12,9 @@ User = get_user_model()
 
 @login_required
 def search_users(request):
+    """
+    Search for users by username (autocomplete).
+    """
     query = request.GET.get("q", "")
     if len(query) > 0:
         users = User.objects.filter(username__icontains=query).exclude(
@@ -26,6 +29,9 @@ def search_users(request):
 
 @login_required
 def follow_users(request):
+    """
+    Display followed users and followers, and handle following new users.
+    """
     if request.method == "POST":
         form = FollowUserForm(request.POST)
         if form.is_valid():
@@ -62,6 +68,9 @@ def follow_users(request):
 
 @login_required
 def unfollow_user(request, user_id):
+    """
+    Unfollow a user.
+    """
     user_to_unfollow = get_object_or_404(User, id=user_id)
     follow_relation = UserFollows.objects.filter(
         user=request.user, followed_user=user_to_unfollow

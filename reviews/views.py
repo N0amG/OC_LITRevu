@@ -7,6 +7,9 @@ from .forms import TicketForm, ReviewForm
 
 @login_required
 def create_ticket(request):
+    """
+    Create a new ticket.
+    """
     if request.method == "POST":
         form = TicketForm(request.POST, request.FILES)
         if form.is_valid():
@@ -23,6 +26,9 @@ def create_ticket(request):
 
 @login_required
 def update_ticket(request, ticket_id):
+    """
+    Update an existing ticket.
+    """
     ticket = get_object_or_404(Ticket, id=ticket_id)
     if ticket.user != request.user:
         return HttpResponseForbidden("Vous n'êtes pas autorisé à modifier ce ticket.")
@@ -43,6 +49,9 @@ def update_ticket(request, ticket_id):
 
 @login_required
 def delete_ticket(request, ticket_id):
+    """
+    Delete a ticket.
+    """
     ticket = get_object_or_404(Ticket, id=ticket_id)
     if ticket.user != request.user and not request.user.is_superuser:
         return HttpResponseForbidden("Vous n'êtes pas autorisé à supprimer ce ticket.")
@@ -56,6 +65,9 @@ def delete_ticket(request, ticket_id):
 
 @login_required
 def create_review(request, ticket_id):
+    """
+    Create a review for a specific ticket.
+    """
     ticket = get_object_or_404(Ticket, id=ticket_id)
     if request.method == "POST":
         form = ReviewForm(request.POST)
@@ -76,6 +88,9 @@ def create_review(request, ticket_id):
 
 @login_required
 def update_review(request, review_id):
+    """
+    Update an existing review.
+    """
     review = get_object_or_404(Review, id=review_id)
     if review.user != request.user:
         return HttpResponseForbidden(
@@ -98,6 +113,9 @@ def update_review(request, review_id):
 
 @login_required
 def delete_review(request, review_id):
+    """
+    Delete a review.
+    """
     review = get_object_or_404(Review, id=review_id)
     if review.user != request.user and not request.user.is_superuser:
         return HttpResponseForbidden(
@@ -113,6 +131,9 @@ def delete_review(request, review_id):
 
 @login_required
 def create_ticket_and_review(request):
+    """
+    Create a ticket and a review in one step.
+    """
     if request.method == "POST":
         ticket_form = TicketForm(request.POST, request.FILES)
         review_form = ReviewForm(request.POST)

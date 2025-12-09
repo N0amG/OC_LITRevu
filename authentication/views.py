@@ -8,7 +8,9 @@ from reviews.models import Ticket, Review
 
 
 def login_view(request):
-
+    """
+    Handle user login.
+    """
     if request.method == "POST":
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
@@ -21,11 +23,17 @@ def login_view(request):
 
 
 def logout_view(request):
+    """
+    Handle user logout.
+    """
     logout(request)
     return redirect("login")
 
 
 def signup_view(request):
+    """
+    Handle user registration.
+    """
     if request.method == "POST":
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
@@ -38,6 +46,9 @@ def signup_view(request):
 
 
 def home_view(request):
+    """
+    Display the user's feed (tickets and reviews from followed users and self).
+    """
     if not request.user.is_authenticated:
         return redirect("login")
 
