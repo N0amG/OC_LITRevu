@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import CustomUserCreationForm
+from reviews.models import Ticket, Review
 
 
 def login_view(request):
@@ -35,4 +36,17 @@ def signup_view(request):
 
 
 def home_view(request):
-    return render(request, "authentication/home.html")
+    tickets = Ticket.objects.all().order_by("-time_created")
+    reviews = Review.objects.all().order_by("-time_created")
+    if not request.user.is_authenticated:
+        return redirect("login")
+    return render(
+        request, "authentication/home.html", {"tickets": tickets, "reviews": reviews}
+    )
+
+
+def redirect_view(request):
+    if request.user.is_authenticated:
+        return redirect("home")
+    else:
+        return redirect("login")

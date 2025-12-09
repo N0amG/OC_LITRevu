@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="flex flex-col items-center justify-center w-full p-6">
+    <div class="card w-96 bg-base-100 shadow-xl border border-base-300">
+        <div class="card-body items-center text-center">
+            <h2 class="card-title text-error">Supprimer le ticket ?</h2>
+            <p>Êtes-vous sûr de vouloir supprimer le ticket "{{ ticket.title }}" ?</p>
+            <p class="text-sm text-gray-500">Cette action est irréversible.</p>
+            
+            <form method="post" class="w-full mt-4">
+                {% csrf_token %}
+                <div class="card-actions justify-center gap-4">
+                    <button type="submit" class="btn btn-error">Confirmer la suppression</button>
+                    <a href="{% url 'home' %}" class="btn btn-ghost">Annuler</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

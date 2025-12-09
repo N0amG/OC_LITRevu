@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="flex flex-col items-center justify-center w-full p-6">
+    <h2 class="text-3xl font-bold mb-6 text-center">Créer un ticket et une critique</h2>
+    
+    <form method="post" class="form-control w-full max-w-2xl gap-6">
+        {% csrf_token %}
+        
+        <div class="card bg-base-200 shadow-sm">
+            <div class="card-body">
+                <h3 class="card-title">Le Ticket</h3>
+                {% for field in ticket_form %}
+                <div>
+                    <label class="label">
+                        <span class="label-text">{{ field.label }}</span>
+                    </label>
+                    <div class="[&>input]:input [&>input]:input-bordered [&>input]:w-full [&>textarea]:textarea [&>textarea]:textarea-bordered [&>textarea]:w-full [&>textarea]:h-24">
+                        {{ field }}
+                    </div>
+                    {% for error in field.errors %}
+                    <label class="label">
+                        <span class="label-text-alt text-error">{{ error }}</span>
+                    </label>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="card bg-base-200 shadow-sm">
+            <div class="card-body">
+                <h3 class="card-title">Votre Critique</h3>
+                {% for field in review_form %}
+                <div>
+                    <label class="label">
+                        <span class="label-text">{{ field.label }}</span>
+                    </label>
+                    {% if field.name == 'rating' %}
+                        <div class="rating gap-1">
+                            {% for radio in field %}
+                                <input type="radio" name="{{ field.name }}" value="{{ radio.data.value }}" class="mask mask-star-2 bg-orange-400" {% if radio.data.selected %}checked{% endif %} />
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="[&>input]:input [&>input]:input-bordered [&>input]:w-full [&>textarea]:textarea [&>textarea]:textarea-bordered [&>textarea]:w-full [&>textarea]:h-24">
+                            {{ field }}
+                        </div>
+                    {% endif %}
+                    {% for error in field.errors %}
+                    <label class="label">
+                        <span class="label-text-alt text-error">{{ error }}</span>
+                    </label>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="flex gap-4 mt-4">
+            <button type="submit" class="btn btn-primary flex-1">Tout publier</button>
+            <a href="{% url 'home' %}" class="btn btn-outline flex-1">Annuler</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const ratings = document.querySelectorAll('.rating input[type="radio"]');
+        ratings.forEach(radio => {
+            // Initialiser l'état
+            radio.dataset.checked = radio.checked;
+            
+            radio.addEventListener('click', function(e) {
+                if (this.dataset.checked === "true") {
+                    this.checked = false;
+                    this.dataset.checked = "false";
+                } else {
+                    // Mettre à jour les autres du même groupe
+                    let name = this.name;
+                    document.querySelectorAll(`input[name="${name}"]`).forEach(r => r.dataset.checked = "false");
+                    this.dataset.checked = "true";
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}
