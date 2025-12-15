@@ -68,18 +68,26 @@
     document.addEventListener('DOMContentLoaded', function() {
         const ratings = document.querySelectorAll('.rating input[type="radio"]');
         ratings.forEach(radio => {
-            // Initialiser l'état
-            radio.dataset.checked = radio.checked;
+            // Stocker l'état précédent
+            radio.dataset.previousValue = radio.checked ? 'true' : 'false';
             
             radio.addEventListener('click', function(e) {
-                if (this.dataset.checked === "true") {
+                // Si on clique sur une étoile déjà cochée
+                if (this.dataset.previousValue === 'true') {
                     this.checked = false;
-                    this.dataset.checked = "false";
+                    this.dataset.previousValue = 'false';
+                    // Décocher visuellement tous les autres du même groupe
+                    const name = this.name;
+                    document.querySelectorAll(`input[name="${name}"]`).forEach(r => {
+                        if (r !== this) r.dataset.previousValue = 'false';
+                    });
                 } else {
-                    // Mettre à jour les autres du même groupe
-                    let name = this.name;
-                    document.querySelectorAll(`input[name="${name}"]`).forEach(r => r.dataset.checked = "false");
-                    this.dataset.checked = "true";
+                    // Mettre à jour l'état
+                    const name = this.name;
+                    document.querySelectorAll(`input[name="${name}"]`).forEach(r => {
+                        r.dataset.previousValue = 'false';
+                    });
+                    this.dataset.previousValue = 'true';
                 }
             });
         });

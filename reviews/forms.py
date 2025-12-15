@@ -26,3 +26,13 @@ class ReviewForm(forms.ModelForm):
             'rating': forms.RadioSelect(choices=[(i, str(i)) for i in range(1, 6)]),
             'body': forms.Textarea(attrs={'rows': 4}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['rating'].required = False
+
+    def clean_rating(self):
+        rating = self.cleaned_data.get('rating')
+        if rating is None:
+            return 0
+        return rating

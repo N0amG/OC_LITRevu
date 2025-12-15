@@ -53,7 +53,7 @@ def delete_ticket(request, ticket_id):
     Delete a ticket.
     """
     ticket = get_object_or_404(Ticket, id=ticket_id)
-    if ticket.user != request.user and not request.user.is_superuser:
+    if ticket.user != request.user:
         return HttpResponseForbidden("Vous n'êtes pas autorisé à supprimer ce ticket.")
 
     if request.method == "POST":
@@ -116,11 +116,7 @@ def delete_review(request, review_id):
     """
     Delete a review.
     """
-    review = get_object_or_404(Review, id=review_id)
-    if review.user != request.user and not request.user.is_superuser:
-        return HttpResponseForbidden(
-            "Vous n'êtes pas autorisé à supprimer cette critique."
-        )
+    review = get_object_or_404(Review, id=review_id, user=request.user)
 
     if request.method == "POST":
         review.delete()

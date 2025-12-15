@@ -2,13 +2,6 @@
 
 {% block content %}
 <div class="flex flex-col items-center w-full p-6 gap-6">
-    <div class="flex justify-between w-full max-w-4xl gap-2 items-center">
-        <a href="{% url 'follow_users' %}" class="btn btn-accent">Abonnements</a>
-        <a href="{% url 'create_ticket' %}" class="btn btn-primary">Demander une critique</a>
-        <a href="{% url 'create_ticket_and_review' %}" class="btn btn-secondary">Créer une critique</a>
-        <a href="{% url 'logout' %}" class="btn btn-outline btn-error">Se déconnecter</a>
-    </div>
-
     <div class="w-full max-w-3xl flex flex-col gap-8">
         {% for post in feed %}
             {% if post.content_type == 'TICKET' %}
@@ -32,7 +25,7 @@
                         {% if post.user == request.user %}
                         <a href="{% url 'update_ticket' post.id %}" class="btn btn-sm btn-ghost">Modifier</a>
                         {% endif %}
-                        {% if post.user == request.user or request.user.is_superuser %}
+                        {% if post.user == request.user %}
                         <a href="{% url 'delete_ticket' post.id %}"
                             class="btn btn-sm btn-ghost text-error">Supprimer</a>
                         {% endif %}
@@ -70,7 +63,7 @@
                         {% if post.user == request.user %}
                         <a href="{% url 'update_review' post.id %}" class="btn btn-xs btn-ghost">Modifier</a>
                         {% endif %}
-                        {% if post.user == request.user or request.user.is_superuser %}
+                        {% if post.user == request.user %}
                         <a href="{% url 'delete_review' post.id %}"
                             class="btn btn-xs btn-ghost text-error">Supprimer</a>
                         {% endif %}

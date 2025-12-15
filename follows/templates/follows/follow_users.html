@@ -2,29 +2,32 @@
 
 {% block content %}
 <div class="flex flex-col items-center w-full p-6 gap-8">
-    <a class="btn btn-soft btn-error btn-sm self-start" href="{% url 'home' %}">Retour</a>
     <h2 class="text-3xl font-bold text-center">Suivre d'autres utilisateurs</h2>
 
     <!-- Formulaire de recherche -->
     <div class="w-full max-w-lg">
-        <form method="post" class="flex gap-2 items-end">
+        <form method="post" class="flex w-full flex-col">
             {% csrf_token %}
-            <div class="form-control w-full relative">
-                <label class="label">
-                    <span class="label-text font-bold">Ajouter un utilisateur</span>
-                </label>
-                {{ form.username }}
-                <ul id="autocomplete-results"
-                    class="menu bg-base-100 w-full rounded-box absolute top-full mt-1 z-50 hidden shadow-xl border border-base-200 max-h-60 overflow-y-auto">
-                    <!-- Les résultats s'afficheront ici -->
-                </ul>
-                {% for error in form.username.errors %}
-                <label class="label">
-                    <span class="label-text-alt text-error">{{ error }}</span>
-                </label>
-                {% endfor %}
+            <div class="flex gap-2 items-end">
+                <div class="form-control w-full relative">
+                    <label class="label">
+                        <span class="label-text font-bold">Ajouter un utilisateur</span>
+                    </label>
+                    {{ form.username }}
+                    <ul id="autocomplete-results"
+                        class="menu bg-base-100 w-full rounded-box absolute top-full mt-1 z-50 hidden shadow-xl border border-base-200 max-h-60 overflow-y-auto">
+                        <!-- Les résultats s'afficheront ici -->
+                    </ul>
+                </div>
+                <button type="submit" class="btn btn-primary">S'abonner</button>
             </div>
-            <button type="submit" class="btn btn-primary">S'abonner</button>
+
+            {% for error in form.username.errors %}
+            <label class="label">
+                <span class="label-text-alt text-error">{{ error }}</span>
+            </label>
+            {% endfor %}
+
         </form>
 
         {% if messages %}
@@ -49,10 +52,15 @@
                     {% for follow in following %}
                     <tr class="hover">
                         <td class="font-bold">{{ follow.followed_user.username }}</td>
-                        <td class="text-right">
+                        <td class="text-right flex gap-2 justify-end">
                             <form method="post" action="{% url 'unfollow_user' follow.followed_user.id %}">
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-sm btn-outline btn-error">Désabonner</button>
+                                <button type="submit" class="btn btn-sm btn-outline btn-warning">Désabonner</button>
+                            </form>
+                            <form method="post" action="{% url 'block_user' follow.followed_user.id %}"
+                                onsubmit="return confirm('Voulez-vous vraiment bloquer cet utilisateur ?');">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-outline btn-error">Bloquer</button>
                             </form>
                         </td>
                     </tr>
@@ -75,6 +83,18 @@
                     {% for follow in followers %}
                     <tr class="hover">
                         <td class="font-bold">{{ follow.user.username }}</td>
+                        <td class="text-right flex gap-2 justify-end">
+                            <form method="post" action="{% url 'remove_follower' follow.user.id %}"
+                                onsubmit="return confirm('Voulez-vous vraiment retirer cet abonné ?');">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-outline btn-warning">Retirer</button>
+                            </form>
+                            <form method="post" action="{% url 'block_user' follow.user.id %}"
+                                onsubmit="return confirm('Voulez-vous vraiment bloquer cet utilisateur ?');">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-outline btn-error">Bloquer</button>
+                            </form>
+                        </td>
                     </tr>
                     {% empty %}
                     <tr>
@@ -85,6 +105,30 @@
             </table>
         </div>
     </div>
+
+    {% if blocked_users %}
+    <!-- Utilisateurs bloqués -->
+    <div class="w-full max-w-2xl">
+        <h3 class="text-xl font-bold mb-4 text-center text-error">Utilisateurs bloqués</h3>
+        <div class="overflow-x-auto">
+            <table class="table w-full bg-base-100 shadow-xl rounded-box">
+                <tbody>
+                    {% for block in blocked_users %}
+                    <tr class="hover">
+                        <td class="font-bold">{{ block.blocked_user.username }}</td>
+                        <td class="text-right">
+                            <form method="post" action="{% url 'unblock_user' block.blocked_user.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-outline btn-success">Débloquer</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
 
     <div class="mt-4">
         <a href="{% url 'home' %}" class="btn btn-ghost">Retour à l'accueil</a>

@@ -1,75 +1,108 @@
 # LITRevu
 
-LITRevu est une application web de critique de livres et d'articles, développée avec Django. Elle permet aux utilisateurs de demander des critiques (via des tickets), de poster des critiques, et de suivre d'autres utilisateurs pour voir leur activité.
-
-## Fonctionnalités
-
-- **Authentification** : Inscription, connexion, déconnexion.
-- **Flux d'activité** : Affichage des tickets et critiques des utilisateurs suivis et de l'utilisateur courant.
-- **Tickets** : Création, modification et suppression de demandes de critiques (avec upload d'image).
-- **Critiques** : Création, modification et suppression de critiques en réponse à des tickets.
-- **Abonnements** : Suivi d'autres utilisateurs, désabonnement, recherche d'utilisateurs avec autocomplétion.
+LITRevu est une application web développée avec Django permettant aux utilisateurs de partager des critiques de livres et d'articles. Les utilisateurs peuvent demander des critiques via des tickets, répondre à ces demandes, et suivre d'autres utilisateurs pour voir leur flux d'activité.
 
 ## Prérequis
 
-- Python 3.8+
-- pip
+Avant de commencer, assurez-vous d'avoir installé :
 
-## Installation
+*   [Python](https://www.python.org/downloads/) (version 3.8 ou supérieure)
+*   [Git](https://git-scm.com/)
 
-1.  **Cloner le dépôt** :
+## Installation pour le développement
 
-    ```bash
-    git clone <url_du_depot>
-    cd OC_LITRevu
-    ```
+Suivez ces étapes pour configurer l'environnement de développement local.
 
-2.  **Créer un environnement virtuel** :
+### 1. Cloner le dépôt
 
-    ```bash
-    python -m venv venv
-    # Windows
-    venv\Scripts\activate
-    # macOS/Linux
-    source venv/bin/activate
-    ```
+Récupérez le code source du projet :
 
-3.  **Installer les dépendances** :
+```bash
+git clone <url_du_depot>
+cd OC_LITRevu
+```
 
-    ```bash
-    pip install -r requirements.txt
-    ```
+### 2. Créer un environnement virtuel
 
-4.  **Appliquer les migrations** :
+Il est recommandé d'utiliser un environnement virtuel pour isoler les dépendances du projet.
 
-    ```bash
-    python manage.py migrate
-    ```
+**Sous Windows :**
 
-5.  **Lancer le serveur de développement** :
+```bash
+python -m venv venv
+venv\Scripts\activate
+```
 
-    ```bash
-    python manage.py runserver
-    ```
+**Sous macOS / Linux :**
 
-    L'application sera accessible à l'adresse `http://127.0.0.1:8000/`.
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
 
-## Utilisation
+### 3. Installer les dépendances
 
-1.  Créez un compte via la page d'inscription.
-2.  Connectez-vous.
-3.  Depuis la page d'accueil, vous pouvez :
-    -   Voir votre flux d'activité.
-    -   Demander une critique (créer un ticket).
-    -   Créer une critique (répondre à un ticket existant ou créer un ticket + critique).
-    -   Gérer vos abonnements via le bouton "Abonnements".
+Installez les paquets Python requis listés dans le fichier `requirements.txt` :
+
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Configurer la base de données
+
+Appliquez les migrations pour créer les tables de la base de données SQLite locale :
+
+```bash
+python manage.py migrate
+```
+
+### 5. Créer un super-utilisateur (Optionnel)
+
+Pour accéder à l'interface d'administration de Django, créez un compte administrateur :
+
+```bash
+python manage.py createsuperuser
+```
+Suivez les instructions à l'écran pour définir le nom d'utilisateur, l'email et le mot de passe.
+
+### 6. Lancer le serveur de développement
+
+Démarrez le serveur local :
+
+```bash
+python manage.py runserver
+```
+
+L'application sera accessible à l'adresse : [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
+
+## Utilisation de l'application
+
+1.  **Inscription/Connexion** : Créez un compte ou connectez-vous.
+2.  **Flux** : La page d'accueil affiche les tickets et critiques des personnes que vous suivez, ainsi que vos propres posts.
+3.  **Créer un Ticket** : Demandez une critique sur un livre/article.
+4.  **Créer une Critique** : Répondez à un ticket existant ou créez une critique libre.
+5.  **Abonnements** : Allez dans l'onglet "Abonnements" pour suivre d'autres utilisateurs (recherche par nom d'utilisateur) ou voir qui vous suit.
+
+## Tests
+
+Pour exécuter les tests unitaires de l'application :
+
+```bash
+python manage.py test
+```
+
+## Structure du projet
+
+*   `authentication/` : Gestion des utilisateurs (inscription, connexion).
+*   `reviews/` : Gestion des tickets et des critiques.
+*   `follows/` : Gestion des abonnements et blocages entre utilisateurs.
+*   `LITRevu/` : Configuration globale du projet Django.
+*   `media/` : Dossier de stockage des images uploadées par les utilisateurs.
+*   `templates/` : Templates HTML globaux.
+*   `db.sqlite3` : Base de données locale.
 
 ## Technologies utilisées
 
--   **Backend** : Django 5.2
--   **Base de données** : SQLite
--   **Frontend** : HTML, CSS (Tailwind CSS, DaisyUI via CDN)
-
-## Note de sécurité
-
-Ce projet est configuré pour un environnement de développement (`DEBUG = True`). La clé secrète (`SECRET_KEY`) est présente dans `settings.py` pour faciliter l'installation locale, mais ne doit jamais être exposée en production.
+*   **Django 5.2** : Framework Web Python.
+*   **SQLite** : Base de données relationnelle légère.
+*   **HTML5 / CSS3** : Structure et style des pages.
