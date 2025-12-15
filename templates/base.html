@@ -13,9 +13,9 @@
 <body>
 
     <div class="flex justify-center w-full">
-        <div class="flex flex-col w-3xl bg-base-200 rounded-xl p-6 m-4">
+        <div class="flex flex-col max-w-3xl w-full min-w-xs bg-base-200 rounded-xl sm:m-4 sm:p-6 p-0">
             {% if user.is_authenticated %}
-            <div class="flex justify-between items-center w-full mb-6 border-b border-base-300 pb-4">
+            <div class="flex justify-between items-center w-full mb-6 p-4 border-b border-base-300 pb-4">
                 <a href="{% url 'home' %}" class="text-2xl font-bold text-primary">LITRevu</a>
                 <div class="badge badge-ghost gap-2 p-3">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -34,11 +34,11 @@
 
                 </div>
             </div>
-            <div class="flex justify-between w-full max-w-4xl gap-2 items-center my-5">
-                <a href="{% url 'home' %}" class="btn btn-info">Flux</a>
-                <a href="{% url 'follow_users' %}" class="btn btn-accent">Abonnements</a>
-                <a href="{% url 'create_ticket' %}" class="btn btn-primary">Demander une critique</a>
-                <a href="{% url 'create_ticket_and_review' %}" class="btn btn-secondary">Créer une critique</a>
+            <div class="flex justify-between max-w-4xl min-w-xs gap-2 items-center my-5 mx-2 sm:flex-row flex-col">
+                <a href="{% url 'home' %}" class="btn btn-info w-full sm:w-auto max-w-100">Flux</a>
+                <a href="{% url 'follow_users' %}" class="btn btn-accent w-full sm:w-auto max-w-100">Abonnements</a>
+                <a href="{% url 'create_ticket' %}" class="btn btn-primary w-full sm:w-auto max-w-100">Demander une critique</a>
+                <a href="{% url 'create_ticket_and_review' %}" class="btn btn-secondary w-full sm:w-auto max-w-100">Créer une critique</a>
             </div>
             {% endif %}
             <div class="w-full h-fit">
