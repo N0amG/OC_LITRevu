@@ -33,9 +33,8 @@ class UserBlocks(models.Model):
     )
 
     class Meta:
-        unique_together = ("user", "blocked_user")
-
-
-constraints = [
-    models.UniqueConstraint(fields=["user", "blocked_user"], name="unique_user_block")
-]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "blocked_user"], name="unique_user_block"
+            )
+        ]
